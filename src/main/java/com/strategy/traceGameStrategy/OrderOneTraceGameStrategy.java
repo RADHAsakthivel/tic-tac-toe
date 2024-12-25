@@ -1,22 +1,26 @@
-package com.Service;
+package com.strategy.traceGameStrategy;
 
-import com.Interfaces.TraceGameIteration;
-import com.Models.GameMove;
-import com.Models.User;
+import com.Interfaces.ITraceGame;
+import com.models.GameMove;
+import com.models.User;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
-public class TraceGameService {
+public class OrderOneTraceGameStrategy implements ITraceGame {
     private final List<GameMove> gameMoves;
-    public TraceGameService() {
+    public OrderOneTraceGameStrategy() {
         gameMoves = new LinkedList<>();
     }
 
+    /**
+     * Will store the player of current move in trace array
+     * @param x int row
+     * @param y int column
+     * @param player user or player of current move
+     */
+    @Override
     public void saveMove(int x, int y, User player){
-//        List<Object> currentMove = new ArrayList(3);
-//        currentMove.add(x);
-//        currentMove.add(y);
-//        currentMove.add(player);
         GameMove currentMove = new GameMove();
         currentMove.setX(x);
         currentMove.setY(y);
@@ -24,6 +28,10 @@ public class TraceGameService {
         this.gameMoves.add(currentMove);
     }
 
+    /**
+     * Remove all trace element which stored in from trace array
+     */
+    @Override
     public void reset(){
         this.gameMoves.clear();
     }
@@ -31,8 +39,9 @@ public class TraceGameService {
     /**
      * This method will remove the last move of given user not the last move game
      * @param player of the games
-     * @return true if the last move is successfully removed else return false
+     * @return GameMove
      */
+    @Override
     public GameMove pollLastMove(User player){
         for(int i = this.gameMoves.size()-1; i >= 0; i--){
             GameMove currentMove = this.gameMoves.get(i);
@@ -44,10 +53,21 @@ public class TraceGameService {
         return null;
     }
 
+    /**
+     * This method will retrieve the specific move from trace array
+     * @param ithMove index of specific move to locate the trace array
+     * @return will return the GameMove object according to input
+     */
+    @Override
     public GameMove getSpecificMove(int ithMove){
         return gameMoves.get(ithMove);
     }
 
+    /**
+     * Returns the length of the trace array
+     * @return Returns the length of the trace array
+     */
+    @Override
     public int getLength(){
         return this.gameMoves.size();
     }
