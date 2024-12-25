@@ -1,20 +1,19 @@
-package com.Models;
+package com.service;
 
-import lombok.Data;
+import com.models.Board;
+import com.models.Cell;
 
 import java.util.ArrayList;
 
-@Data
-public class Board {
-    ArrayList<ArrayList<Cell>> cells;
-    int size;
+public class BoardService {
+    Board board;
 
-    public Board(int _size) {
-        this.size = _size;
+    public BoardService(Board board) {
+        this.board = board;
     }
 
     public void resetBoard() {
-        for(ArrayList<Cell> row : cells){
+        for(ArrayList<Cell> row : board.getCells()){
             for(Cell cell : row){
                 cell.user = null;
             }
@@ -22,20 +21,21 @@ public class Board {
     }
 
     public ArrayList<ArrayList<Cell>> createBoard() {
-        cells = new ArrayList<>();
+        board.setCells(new ArrayList<>());
+        int size = board.getSize();
         for (int i = 0; i < size; i++) {
             ArrayList<Cell> row = new ArrayList<>();
             for (int j = 0; j < size; j++)
                 row.add(new Cell());
-            cells.add(row);
+            board.getCells().add(row);
         }
-        return this.cells;
+        return board.getCells();
     }
-
+//
     public boolean isFull() {
         int i = 0;
-        while (i < cells.size()) {
-            ArrayList<Cell> row = cells.get(i);
+        while (i < board.getCells().size()) {
+            ArrayList<Cell> row = board.getCells().get(i);
             for(Cell cell : row){
                 if(cell.user == null){
                     return false;
@@ -47,13 +47,17 @@ public class Board {
     }
 
     public Cell getCell(int x, int y) {
-        return cells.get(x).get(y);
+        return board.getCells().get(x).get(y);
+    }
+
+    public boolean isCellOccupied(int x, int y){
+        return board.getCells().get(x).get(y).getUser() != null;
     }
 
     public boolean resetCell(int x, int y) {
-        ArrayList<Cell> row = cells.get(x);
+        ArrayList<Cell> row = board.getCells().get(x);
         Cell cell = row.get(y);
         cell.user = null;
-        return cells.get(x).get(y) == null;
+        return board.getCells().get(x).get(y) == null;
     }
 }

@@ -1,6 +1,6 @@
 package com.Interfaces;
 
-import com.Models.GameMove;
+import com.models.GameMove;
 
 @FunctionalInterface
 public interface TraceGameIteration {

@@ -1,18 +1,19 @@
-package com.strategy;
+package com.strategy.winningStrategy;
 
-import com.Models.User;
+import com.Interfaces.IWinningStrategy;
+import com.models.User;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class WinningStrategy implements IWinningStrategy{
+public class OrderOneWinningStrategy implements IWinningStrategy {
     ArrayList<HashMap<Character,Integer>> rowList;
     ArrayList<HashMap<Character,Integer>> colList;
     HashMap<Character,Integer> diagonalList;
     HashMap<Character,Integer> antiDiagonalList;
     int size;
 
-    public WinningStrategy(int _size){
+    public OrderOneWinningStrategy(int _size){
         this.size = _size;
         rowList = new ArrayList<>();
         colList = new ArrayList<>();
@@ -25,6 +26,7 @@ public class WinningStrategy implements IWinningStrategy{
         }
     }
 
+    @Override
     public void addPlayer(int x, int y, User player){
         HashMap<Character,Integer> row = rowList.get(x);
         HashMap<Character,Integer> col = colList.get(y);
@@ -42,6 +44,7 @@ public class WinningStrategy implements IWinningStrategy{
         }
     }
 
+    @Override
     public void removePlayer(int x, int y, User player){
         HashMap<Character,Integer> row = rowList.get(x);
         HashMap<Character,Integer> col = colList.get(y);
@@ -72,6 +75,7 @@ public class WinningStrategy implements IWinningStrategy{
         else return this.colList.get(y).getOrDefault(playerSymbol,0) == size;
     }
 
+    @Override
     public void reset(){
         this.rowList = new ArrayList<>();
         this.colList = new ArrayList<>();

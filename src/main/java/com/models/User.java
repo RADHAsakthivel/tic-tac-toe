@@ -1,4 +1,4 @@
-package com.Models;
+package com.models;
 import lombok.Data;;
 
 @Data
