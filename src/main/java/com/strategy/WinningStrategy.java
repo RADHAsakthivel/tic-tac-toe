@@ -25,7 +25,6 @@ public class WinningStrategy implements IWinningStrategy{
         }
     }
 
-
     public void addPlayer(int x, int y, User player){
         HashMap<Character,Integer> row = rowList.get(x);
         HashMap<Character,Integer> col = colList.get(y);

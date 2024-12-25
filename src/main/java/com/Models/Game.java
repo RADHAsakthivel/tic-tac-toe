@@ -2,12 +2,12 @@ package com.Models;
 
 import com.Service.TraceGameService;
 import com.strategy.WinningStrategy;
+import lombok.Data;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
+@Data
 public class Game {
     Board board;
     ArrayList<User> players;
@@ -31,8 +31,8 @@ public class Game {
         for (int i = 0; i < sizeOfBoard; i++) {
             for (int j = 0; j < sizeOfBoard; j++) {
                 User currUser = this.board.getCell(i, j).user;
-                char symbolOfCurUser = (currUser != null && currUser.getSymbol() != '\u0000') ? currUser.getSymbol() : '_';
-                System.out.print(MessageFormat.format(" | {0}", symbolOfCurUser));
+                char symbol = (currUser != null && currUser.getSymbol() != '\u0000') ? currUser.getSymbol() : '_';
+                System.out.print(MessageFormat.format(" | {0}", symbol));
             }
             System.out.println(" |");
             System.out.println();
@@ -40,16 +40,34 @@ public class Game {
     }
 
     public void replayGame(){
-        AtomicInteger j = new AtomicInteger(1);
-        this.traceGame.iterateRegular((item,index) -> {
-            if(j.get() == this.board.size){
-                System.out.print(MessageFormat.format(" | {0} |", item.get(2)));
+        int n = this.board.size;
+        board.resetBoard();
+        for(int move = 0; move < (n * n); move++){
+            GameMove currentMove = move < traceGame.getLength() ? traceGame.getSpecificMove(move) : null;
+            System.out.println();
+            System.out.println();
+            for (int x = 0; x < n; x++) {
+                for (int y = 0; y < n; y++) {
+                    if(currentMove != null && currentMove.getX() == x && currentMove.getY() == y){
+                        board.getCell(x, y).user = currentMove.user;
+                        char symbol = currentMove.getUser().getSymbol();
+                        System.out.print(MessageFormat.format(" | {0}", symbol));
+                    }else{
+                        User currUser = this.board.getCell(x, y).user;
+                        char symbol = (currUser != null && currUser.getSymbol() != '\u0000') ? currUser.getSymbol() : '_';
+                        System.out.print(MessageFormat.format(" | {0}", symbol));
+                    }
+                }
+                System.out.println(" |");
                 System.out.println();
-                j.set(0);
-            }else {
-                System.out.print(MessageFormat.format(" | {0}", item.get(2)));
+                System.out.println();
             }
-        });
+            try{
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                System.out.println("Thread was interrupted!");
+            }
+        }
     }
 
     public boolean makeMove(int x, int y) {
@@ -89,9 +107,9 @@ public class Game {
 
     public boolean undoLastMove(){
         if(!isLastMoveIsUndo){
-            List<Object> removedData =  traceGame.pollLastMove(getCurrentPlayer());
-            int row = Integer.parseInt(removedData.get(0).toString());
-            int col = Integer.parseInt(removedData.get(1).toString());
+            GameMove removedData =  traceGame.pollLastMove(getCurrentPlayer());
+            int row = removedData.getX();
+            int col = removedData.getY();
             board.resetCell(row,col);
             this.winningStrategy.removePlayer(row,col,getCurrentPlayer());
             isLastMoveIsUndo = true;
@@ -106,5 +124,6 @@ public class Game {
         traceGame.reset();
         isLastMoveIsUndo = false;
         lastMoveX = lastMoveY = 0;
+        currentPlayerIndex = 0;
     }
 }

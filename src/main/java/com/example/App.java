@@ -2,6 +2,11 @@ package com.example;
 import com.Models.Board;
 import com.Models.Game;
 import com.Models.User;
+import com.Service.BoardService;
+import com.Service.CellService;
+import com.Service.GameService;
+import com.controllers.GameController;
+import com.strategy.WinningStrategy;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -36,7 +41,14 @@ public class App
             j++;
         }
         Board board = new Board(size);
+//        BoardService boardService = new BoardService(board);
         Game game = new Game(board,users);
+//        GameService gameService = new GameService(game,boardService);
+//        GameController gameController = new GameController(gameService,boardService);
+//        gameController.startGame();
+
+
+
         game.renderBoard();
         while(true){
             System.out.println("Enter the row number " + game.getCurrentPlayer() + " : ");
@@ -60,12 +72,14 @@ public class App
                         game.renderBoard();
                         if(game.isWon(row,column,game.getCurrentPlayer())) {
                             System.out.println("Congratulations! You won!");
+                            replayGame(game,sc);
                             if(resetGame(game,sc))continue;
                             break;
 
                         };
                         if(game.isDraw()) {
                             System.out.println("All the cells are fill hence the match is draw");
+                            replayGame(game,sc);
                             if(resetGame(game,sc))continue;
                             break;
                         };
@@ -74,12 +88,14 @@ public class App
                 }
             }
         }
+        System.out.println("ThankYou for playing Tic-Tac-Toe byeeee :)!");
+        System.exit(0);
     }
 
     private static boolean replayGame(Game game, Scanner sc){
         System.out.println("Do you want to replay the game ?? Y ? N");
         if (sc.hasNextLine()) {
-            sc.nextLine(); // Consume leftover newline
+            sc.nextLine();
         }
         String replayInput = sc.nextLine();
         if(replayInput.equalsIgnoreCase("Y")){
@@ -91,13 +107,17 @@ public class App
 
     private static boolean resetGame(Game game, Scanner sc){
         System.out.println("Do you want to play again ?? Y ? N");
+//        if (sc.hasNextLine()) {
+//            sc.nextLine();
+//        }
         String playAgainInput = sc.nextLine();
         if(playAgainInput.equalsIgnoreCase("Y")){
             System.out.print("\033[H\033[2J");
             System.out.flush();
             game.resetGame();
             return true;
+        }else{
+            return false;
         }
-        return false;
     }
 }

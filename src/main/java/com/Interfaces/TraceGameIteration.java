@@ -1,8 +1,8 @@
 package com.Interfaces;
 
-import java.util.List;
+import com.Models.GameMove;
 
 @FunctionalInterface
 public interface TraceGameIteration {
-    public void doAction(List<Object> input, int index);
+    public void doAction(GameMove input, int index);
 }
